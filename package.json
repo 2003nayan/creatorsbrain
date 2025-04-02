@@ -11,7 +11,9 @@
   "dependencies": {
     "@clerk/nextjs": "^6.12.12",
     "@radix-ui/react-slot": "^1.1.2",
+    "@schematichq/schematic-components": "^0.7.3",
     "@schematichq/schematic-react": "^1.2.4",
+    "@schematichq/schematic-typescript-node": "^1.1.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.486.0",

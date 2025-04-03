@@ -1,3 +1,5 @@
+// Bug File
+
 "use client";
 
 import { SchematicProvider } from "@schematichq/schematic-react";

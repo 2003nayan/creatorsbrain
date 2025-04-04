@@ -7,7 +7,7 @@ import fetchTranscript from "../../tools/fetchTranscript";
 import { generateImage } from "../../tools/generateImage";
 import { z } from "zod";
 import { getVideoIdFromUrl } from "@/lib/getVideoIdFromUrl";
-import generateTitle from "@/tools/generateTitle";
+import generateTitle from "../../tools/generateTitle";
 
 const anthropic = createAnthropic({
   apiKey: process.env.CLAUDE_API_KEY,

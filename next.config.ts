@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
         protocol: "https",
       },
       {
-        hostname: "acoustic-orca-473.convex.cloud",
+        hostname: "giant-mosquito-247.convex.cloud",
         protocol: "https",
       },
     ],

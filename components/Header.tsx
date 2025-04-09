@@ -8,6 +8,9 @@ import { Button } from "./ui/button";
 function Header() {
   return (
     <header className="sticky top-0 left-0 right-0 px-4 md:px-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 z-50">
+      <div className="bg-yellow-100 py-1 px-4 text-center text-md text-yellow-800">
+        🚧 This project is currently under development 🚧
+      </div>
       <div className="container mx-auto">
         <div className="flex items-center justify-between h-16">
           {/* Left */}
@@ -23,14 +26,15 @@ function Header() {
           {/* Right */}
           <div className="flex items-center gap-4">
             <SignedIn>
-              <Link href="/manage-plan">
+              {/* <Link href="/manage-plan">
                 <Button
                   variant="outline"
                   className="mr-4 bg-gradient-to-r from-blue-600 to-blue-400 text-transparent bg-clip-text"
+                  
                 >
                   Manage Plan
                 </Button>
-              </Link>
+              </Link> */}
 
               <div className="p-2 w-10 h-10 flex items-center justify-center rounded-full border bg-blue-100 border-blue-200">
                 <UserButton />

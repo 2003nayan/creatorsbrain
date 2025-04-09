@@ -252,7 +252,8 @@ function AiAgentChat({ videoId }: { videoId: string }) {
               className="text-xs xl:text-sm w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={generateScript}
               type="button"
-              disabled={!isScriptGenerationEnabled}
+              // disabled={!isScriptGenerationEnabled}
+              disabled
             >
               <LetterText className="w-4 h-4" />
               {isScriptGenerationEnabled ? (
@@ -266,7 +267,8 @@ function AiAgentChat({ videoId }: { videoId: string }) {
               className="text-xs xl:text-sm w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={generateTitle}
               type="button"
-              disabled={!isTitleGenerationEnabled}
+              // disabled={!isTitleGenerationEnabled}
+              disabled
             >
               <PenIcon className="w-4 h-4" />
               Generate Title
@@ -276,7 +278,8 @@ function AiAgentChat({ videoId }: { videoId: string }) {
               className="text-xs xl:text-sm w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={generateImage}
               type="button"
-              disabled={!isImageGenerationEnabled}
+              // disabled={!isImageGenerationEnabled}
+              disabled
             >
               <ImageIcon className="w-4 h-4" />
               Generate Image

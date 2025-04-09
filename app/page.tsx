@@ -93,11 +93,10 @@ export default function Home() {
               </span>
             </h1>
 
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 mb-4 max-w-2xl mx-auto">
               Transform your video content with AI-powered analysis,
               transcription, and insights. Get started in seconds.
             </p>
-
             <YoutubeVideoForm />
           </div>
         </div>
@@ -163,15 +162,26 @@ export default function Home() {
       </section>
 
       {/* Footer section */}
-      <section className="py-20 px-4 md:px-0 bg-gradient-to-r from-blue-600 to-blue-400">
+      <section className="py-18 px-4 md:px-0 bg-gradient-to-r from-blue-600 to-blue-400">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-white mb-6">
             Ready to Meet Your AI Content Agent?
           </h2>
-          <p className="text-xl text-blue-50">
+          <p className="text-xl text-blue-50 mb-6">
             Join creators leveraging AI to unlock content insights
           </p>
+          {/* <div className="mt-10 py-8 flex flex-col md:flex-row justify-between items-center"> */}
+          <p className="text-sm text-white mb-6">
+            © 2025 Creator&apos;s Brain. All rights reserved.
+          </p>
+          <p className="text-white font-medium">
+            Designed & Developed by{" "}
+            <b>
+              <u>Nayan Katiyara</u>
+            </b>
+          </p>
         </div>
+        {/* </div> */}
       </section>
     </div>
   );

@@ -23,7 +23,7 @@ interface ToolPart {
 const formatToolInvocation = (part: ToolPart) => {
   if (!part.toolInvocation) return "Unknown Tool";
   return `🔧 Tool Used: ${part.toolInvocation.toolName}`;
-};
+}; // Defines the shape of AI tool responses (like when the AI calls a tool to generate a script). formatToolInvocation is a helper to show which tool was used.
 
 function AiAgentChat({ videoId }: { videoId: string }) {
   // Scrolling to Bottom Logic
@@ -32,9 +32,20 @@ function AiAgentChat({ videoId }: { videoId: string }) {
 
   const { messages, input, handleInputChange, handleSubmit, append, status } =
     useChat({
+      api: "/api/chat", // Ensure this points to your endpoint
+      id: videoId, // Use videoId as the conversation identifier
+      body: { videoId }, // Include videoId in the request body
       maxSteps: 5,
-      body: {
-        videoId,
+      streamProtocol: "text", // Since you're streaming plain text chunks
+      onResponse: (response) => {
+        console.log("Stream response initiated:", response.status);
+      },
+      onFinish: () => {
+        console.log("Stream completed");
+      },
+      onError: (error) => {
+        console.error("Chat error:", error);
+        toast.error("Something went wrong with the AI response");
       },
     });
 
@@ -46,7 +57,8 @@ function AiAgentChat({ videoId }: { videoId: string }) {
   );
   const isTitleGenerationEnabled = useSchematicFlag(
     FeatureFlag.TITLE_GENERATIONS
-  );
+  ); // These check if each feature is enabled (likely based on user tier or config). Determines whether to allow script, title, or image generation.
+
   const isVideoAnalysisEnabled = useSchematicFlag(FeatureFlag.ANALYSE_VIDEO);
 
   useEffect(() => {
@@ -54,7 +66,9 @@ function AiAgentChat({ videoId }: { videoId: string }) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+
+    console.log("Messages updated: ", messages);
+  }, [messages]); // Scrolls the chat to the bottom whenever messages change.
 
   useEffect(() => {
     let toastId;
@@ -73,17 +87,18 @@ function AiAgentChat({ videoId }: { videoId: string }) {
         });
         break;
       case "error":
-        toastId = toast("Whoops! Something went wrong, please try again.", {
+        toastId = toast("Firse Maa Chud Gayi... Try again!", {
           id: toastId,
           icon: <BotIcon className="w-4 h-4" />,
         });
+        console.error("❌ Error status triggered. Full messages:", messages);
         break;
       case "ready":
         toast.dismiss(toastId);
-
         break;
     }
-  }, [status]);
+    console.log("Chat Status: ", status);
+  }, [status]); // Shows a toast based on chat status. Uses different icons/text when the AI is thinking, replying, or if an error occurred.
 
   const generateScript = async () => {
     const randomId = Math.random().toString(36).substring(2, 15);
@@ -92,8 +107,9 @@ function AiAgentChat({ videoId }: { videoId: string }) {
       id: `generate-script-${randomId}`,
       role: "user",
       content:
-        "Generate a step-by-step shooting script for this video that I can use on my own channel to produce a video that is similar to this one, dont do any other steps such as generating a image, just generate the script only!",
+        "Generate a step-by-step shooting script for this video that I can use on my own channel to produce a video that is similar to this one, don't do any other steps such as generating a image, just generate the script only!",
     };
+    console.log("Appended Message: ", userMessage);
     append(userMessage);
   };
 
@@ -115,7 +131,7 @@ function AiAgentChat({ videoId }: { videoId: string }) {
       content: "Generate a title for this video",
     };
     append(userMessage);
-  };
+  }; // Asks the AI to do specific tasks according to the button clicked.
 
   return (
     <div className="flex flex-col h-full">
@@ -152,39 +168,37 @@ function AiAgentChat({ videoId }: { videoId: string }) {
                   m.role === "user" ? "bg-blue-500" : "bg-gray-100"
                 } rounded-2xl px-4 py-3`}
               >
-                {m.parts && m.role === "assistant" ? (
-                  // AI message
-                  <div className="space-y-3">
-                    {m.parts.map((part, i) =>
-                      part.type === "text" ? (
-                        <div key={i} className="prose prose-sm max-w-none">
-                          <ReactMarkdown>{part.text}</ReactMarkdown>
-                        </div>
-                      ) : part.type === "tool-invocation" ? (
-                        <div
-                          key={i}
-                          className="bg-white/50 rounded-lg p-2 space-y-2 text-gray-800 "
-                        >
-                          <div className="font-medium text-xs">
-                            {formatToolInvocation(part as ToolPart)}
-                          </div>
-                          {(part as ToolPart).toolInvocation.result && (
-                            <pre className="text-xs bg-white/75 p-2 rounded overflow-auto max-h-40">
-                              {JSON.stringify(
-                                (part as ToolPart).toolInvocation.result,
-                                null,
-                                2
-                              )}
-                            </pre>
-                          )}
-                        </div>
-                      ) : null
+                {/* Handle different possible message structures */}
+                {m.role === "assistant" ? (
+                  <div className="prose prose-sm max-w-none text-gray-800">
+                    {m.parts ? (
+                      // If message has parts array
+                      <div className="space-y-3">
+                        {m.parts.map((part, i) =>
+                          part.type === "text" ? (
+                            <div key={i}>
+                              <ReactMarkdown>{part.text}</ReactMarkdown>
+                            </div>
+                          ) : part.type === "tool-invocation" ? (
+                            <div key={i}>
+                              {formatToolInvocation(part as ToolPart)}
+                            </div>
+                          ) : null
+                        )}
+                      </div>
+                    ) : (
+                      // If message has content as string
+                      <ReactMarkdown>{m.content}</ReactMarkdown>
                     )}
                   </div>
                 ) : (
                   // User message
                   <div className="prose prose-sm max-w-none text-white">
-                    <ReactMarkdown>{m.content}</ReactMarkdown>
+                    <ReactMarkdown>
+                      {typeof m.content === "string"
+                        ? m.content
+                        : JSON.stringify(m.content)}
+                    </ReactMarkdown>
                   </div>
                 )}
               </div>
@@ -197,7 +211,14 @@ function AiAgentChat({ videoId }: { videoId: string }) {
       {/* Input form */}
       <div className="border-t border-gray-100 p-4 bg-white">
         <div className="space-y-3">
-          <form onSubmit={handleSubmit} className="flex gap-2">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              console.log("Submitting:", input);
+              handleSubmit(e);
+            }}
+            className="flex gap-2"
+          >
             <input
               className="flex-1 px-4 py-2 text-sm border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               type="text"

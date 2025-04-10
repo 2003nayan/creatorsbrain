@@ -87,7 +87,7 @@ function AiAgentChat({ videoId }: { videoId: string }) {
         });
         break;
       case "error":
-        toastId = toast("Firse Maa Chud Gayi... Try again!", {
+        toastId = toast("Whoops! Something went wrong, please try again.", {
           id: toastId,
           icon: <BotIcon className="w-4 h-4" />,
         });

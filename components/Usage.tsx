@@ -6,6 +6,7 @@ import {
   useSchematicIsPending,
 } from "@schematichq/schematic-react";
 import { Progress } from "./ui/progress";
+import { useEffect } from "react";
 
 function Usage({
   featureFlag,
@@ -20,6 +21,27 @@ function Usage({
     featureUsage,
     value: isFeatureEnabled,
   } = useSchematicEntitlement(featureFlag);
+
+  // Add auto-refresh logic when isFeatureEnabled is false
+  useEffect(() => {
+    // Only attempt refresh if:
+    // 1. We're not in a loading state
+    // 2. The feature is not enabled
+    // 3. This isn't already a refresh (to prevent refresh loops)
+    if (
+      !isPending &&
+      isFeatureEnabled === false &&
+      !sessionStorage.getItem("hasRefreshed")
+    ) {
+      console.log("Feature disabled, triggering refresh...");
+      // Set a flag to prevent refresh loops
+      sessionStorage.setItem("hasRefreshed", "true");
+      // Add a small delay before refreshing
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    }
+  }, [isPending, isFeatureEnabled]);
 
   const hasUsedAllTokens =
     featureUsage && featureAllocation && featureUsage >= featureAllocation;
